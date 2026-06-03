@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalog — GameStoB</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* Sidebar Filter */
+    .filter-sidebar {
+      position: sticky;
+      top: 90px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .filter-sidebar h3 {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .filter-group { margin-bottom: 24px; }
+    .filter-group h4 {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .filter-group label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    .filter-group label:hover { color: var(--accent-neon); }
+    .filter-group input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent-purple);
+    }
+    .filter-search {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      outline: none;
+      transition: all var(--transition);
+      margin-bottom: 20px;
+    }
+    .filter-search:focus {
+      border-color: var(--accent-neon);
+      box-shadow: 0 0 0 2px rgba(168,85,247,0.15);
+    }
+
+    /* Game Grid */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .catalog-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+    .catalog-card:hover {
+      border-color: var(--border-bright);
+      box-shadow: var(--glow-purple);
+      transform: translateY(-4px);
+    }
+    .catalog-card-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .catalog-card-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.6));
+    }
+    .catalog-card-body { padding: 18px; }
+    .catalog-card-body h3 {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .catalog-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .catalog-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-dim);
+    }
+
+    /* Sort bar */
+    .catalog-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .catalog-topbar p { color: var(--text-secondary); font-size: 0.9rem; }
+    .sort-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 768px) {
+      .catalog-layout { grid-template-columns: 1fr; }
+      .filter-sidebar { position: static; }
+      .catalog-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media screen and (max-width: 480px) {
+      .catalog-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">Game<span>StoB</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="catalog.html" class="active">Catalog</a></li>
+        <li><a href="purchase.html">Purchase</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="locations.html">Locations</a></li>
+      </ul>
+      <div class="nav-hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="container">
+      <h1>Game <span style="color:var(--accent-neon)">Catalog</span></h1>
+      <p>5,000+ titles across all platforms and genres. Find your next obsession.</p>
+    </div>
+  </div>
+
+  <section style="padding-top:0;">
+    <div class="container">
+      <div class="catalog-layout">
+
+        <!-- Sidebar -->
+        <aside class="filter-sidebar">
+          <h3>🎮 Filters</h3>
+          <input type="text" class="filter-search" id="search-input" placeholder="Search games…">
+
+          <div class="filter-group">
+            <h4>Genre</h4>
+            <label><input type="checkbox" class="filter-genre" value="Action RPG" checked> Action RPG</label>
+            <label><input type="checkbox" class="filter-genre" value="FPS" checked> FPS</label>
+            <label><input type="checkbox" class="filter-genre" value="Strategy" checked> Strategy</label>
+            <label><input type="checkbox" class="filter-genre" value="Simulation" checked> Simulation</label>
+            <label><input type="checkbox" class="filter-genre" value="Horror" checked> Horror</label>
+            <label><input type="checkbox" class="filter-genre" value="Racing" checked> Racing</label>
+            <label><input type="checkbox" class="filter-genre" value="Sports" checked> Sports</label>
+          </div>
+
+          <div class="filter-group">
+            <h4>Platform</h4>
+            <label><input type="checkbox" class="filter-platform" value="PC" checked> PC</label>
+            <label><input type="checkbox" class="filter-platform" value="PS5" checked> PlayStation 5</label>
+            <label><input type="checkbox" class="filter-platform" value="Xbox" checked> Xbox</label>
+            <label><input type="checkbox" class="filter-platform" value="Switch" checked> Nintendo Switch</label>
+          </div>
+
+          <button class="btn btn-outline" style="width:100%;justify-content:center;" onclick="resetFilters()">Reset Filters</button>
+        </aside>
+
+        <!-- Main Content -->
+        <div>
+          <div class="catalog-topbar">
+            <p>Showing <strong id="game-count">12</strong> games</p>
+            <select class="sort-select" id="sort-select">
+              <option value="default">Sort: Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name">Name: A–Z</option>
+            </select>
+          </div>
+          <div class="catalog-grid" id="catalog-grid">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="nav-logo">Game<span>StoB</span></a>
+          <p>Your universe of authentic game keys, new releases, DLCs, and offline store experiences since 2015.</p>
+        </div>
+        <div class="footer-col"><h4>Navigate</h4><ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="catalog.html">Catalog</a></li>
+          <li><a href="purchase.html">Purchase</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="locations.html">Locations</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Platform</h4><ul>
+          <li><a href="#">PC Games</a></li>
+          <li><a href="#">PlayStation</a></li>
+          <li><a href="#">Xbox</a></li>
+          <li><a href="#">Nintendo Switch</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Support</h4><ul>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Refund Policy</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 GameStoB. All rights reserved.</p>
+        <p style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.75rem;">COMP6800 · HCI Project</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const games = [
+      { title: "Neon Horizon X",    genre: "Action RPG", platform: "PC",    price: 59.99, img: "../assets/images/neon horizon x.jpg",    badge: "NEW",   badgeClass: "badge-pink" },
+      { title: "Void Crusaders",    genre: "Strategy",   platform: "Xbox",  price: 49.99, img: "../assets/images/void crussader.jpg",     badge: "NEW",   badgeClass: "badge-pink" },
+      { title: "Stellar Collapse",  genre: "FPS",        platform: "PC",    price: 39.99, img: "../assets/images/stellar-blade-review-no-banner.jpg", badge: "NEW", badgeClass: "badge-pink" },
+      { title: "Chrome Protocol",   genre: "Action RPG", platform: "PS5",   price: 54.99, img: "../assets/images/chrome protocol.jpg",    badge: "NEW",   badgeClass: "badge-pink" },
+      { title: "Dark Nexus",        genre: "Horror",     platform: "PC",    price: 24.99, img: "../assets/images/dark nexus.jpg",         badge: "SALE",  badgeClass: "badge-cyan" },
+      { title: "Verdant Empire",    genre: "Simulation", platform: "PC",    price: 29.99, img: "../assets/images/verdant empire.jpg",     badge: "TOP",   badgeClass: "badge-green" },
+      { title: "Apex Protocol",     genre: "FPS",        platform: "PS5",   price: 34.99, img: "../assets/images/apex protocol.jpg",      badge: "SALE",  badgeClass: "badge-cyan" },
+      { title: "Thunder Grid",      genre: "Racing",     platform: "Xbox",  price: 19.99, img: "../assets/images/thunder grid.jpg",       badge: "TOP",   badgeClass: "badge-green" },
+      { title: "Shadow Labyrinth",  genre: "Action RPG", platform: "Switch",price: 44.99, img: "../assets/images/shadow labyrinth.jpg",   badge: "HOT",   badgeClass: "badge-purple" },
+      { title: "Quantum Break 2",   genre: "FPS",        platform: "PC",    price: 49.99, img: "../assets/images/quantum break 2.jpg",    badge: "NEW",   badgeClass: "badge-pink" },
+      { title: "Sport Legends 26",  genre: "Sports",     platform: "PS5",   price: 59.99, img: "../assets/images/sports legend 26.jpg",   badge: "NEW",   badgeClass: "badge-pink" },
+      { title: "Dungeon Architect", genre: "Strategy",   platform: "PC",    price: 14.99, img: "../assets/images/dungeon architect.jpg",  badge: "DEAL",  badgeClass: "badge-cyan" },
+    ];
+
+    const bgMap = {
+      "🚀": "135deg, #0a0a2a, #1a0a2e",
+      "⚔️":  "135deg, #1a0a0a, #2a0a1a",
+      "🌌": "135deg, #050520, #0a0a30",
+      "🤖": "135deg, #0a1a0f, #0a2a1a",
+      "🔥": "135deg, #1a0500, #2a0a00",
+      "🌿": "135deg, #001a05, #002a0a",
+      "🎯": "135deg, #0a0020, #1a003a",
+      "⚡":  "135deg, #1a1a00, #2a2a00",
+      "🗡️": "135deg, #0a0a1a, #1a1a2e",
+      "⚛️":  "135deg, #001a1a, #002a2a",
+      "🏆": "135deg, #1a0a00, #2a1400",
+      "🏰": "135deg, #1a1a10, #2a2a18",
+    };
+
+    function renderGames() {
+      const searchVal = document.getElementById('search-input').value.toLowerCase();
+      const activeGenres = [...document.querySelectorAll('.filter-genre:checked')].map(c => c.value);
+      const activePlatforms = [...document.querySelectorAll('.filter-platform:checked')].map(c => c.value);
+      const sort = document.getElementById('sort-select').value;
+
+      let filtered = games.filter(g =>
+        g.title.toLowerCase().includes(searchVal) &&
+        activeGenres.includes(g.genre) &&
+        activePlatforms.includes(g.platform)
+      );
+
+      if (sort === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+      else if (sort === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+      else if (sort === 'name') filtered.sort((a,b) => a.title.localeCompare(b.title));
+
+      document.getElementById('game-count').textContent = filtered.length;
+      document.getElementById('catalog-grid').innerHTML = filtered.map(g => `
+        <div class="catalog-card">
+          <div class="catalog-card-thumb" style="overflow:hidden;padding:0;">
+            <img src="${g.img}" alt="${g.title}" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div class="catalog-card-body">
+            <span class="badge ${g.badgeClass}">${g.badge}</span>
+            <h3>${g.title}</h3>
+            <div class="catalog-meta">
+              <span class="badge badge-purple">${g.genre}</span>
+              <span class="badge badge-cyan">${g.platform}</span>
+            </div>
+            <div class="catalog-footer">
+              <span class="price">$${g.price.toFixed(2)}</span>
+              <a href="purchase.html" class="btn btn-primary" style="padding:8px 16px;font-size:0.65rem;">Buy Now</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function resetFilters() {
+      document.querySelectorAll('.filter-genre, .filter-platform').forEach(c => c.checked = true);
+      document.getElementById('search-input').value = '';
+      document.getElementById('sort-select').value = 'default';
+      renderGames();
+    }
+
+    document.getElementById('search-input').addEventListener('input', renderGames);
+    document.getElementById('sort-select').addEventListener('change', renderGames);
+    document.querySelectorAll('.filter-genre, .filter-platform').forEach(c => c.addEventListener('change', renderGames));
+    renderGames();
+  </script>
+</body>
+</html>

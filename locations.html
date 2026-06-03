@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Locations — GameStoB</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .locations-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    .location-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+    .location-card:hover {
+      border-color: var(--border-bright);
+      box-shadow: var(--glow-purple);
+      transform: translateY(-4px);
+    }
+    .location-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .location-thumb span { position: relative; z-index: 1; }
+    .location-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.7));
+    }
+    .location-body { padding: 24px; }
+    .location-body h3 {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .location-desc { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
+    .location-info { display: flex; flex-direction: column; gap: 8px; }
+    .location-info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .location-info-row .info-icon { flex-shrink: 0; font-size: 0.9rem; }
+    .location-info-row span { line-height: 1.5; }
+    .hours-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 2px;
+      margin-bottom: 12px;
+    }
+    .open  { background: rgba(74,222,128,0.12); color: var(--accent-green); border: 1px solid rgba(74,222,128,0.25); }
+    .closed { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
+
+    /* Map placeholder */
+    .map-placeholder {
+      background: linear-gradient(135deg, #0f0f1a, #1a0a2e);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      height: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,58,237,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .map-placeholder .map-pins {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .map-pin {
+      position: absolute;
+      font-size: 1.4rem;
+      animation: pulse-pin 2s ease-in-out infinite;
+    }
+    @keyframes pulse-pin {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    .map-placeholder p {
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+    .map-icon { font-size: 2.5rem; position: relative; z-index: 1; }
+
+    @media screen and (max-width: 768px) {
+      .locations-grid { grid-template-columns: 1fr; }
+    }
+    @media screen and (max-width: 1024px) {
+      .locations-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">Game<span>StoB</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="catalog.html">Catalog</a></li>
+        <li><a href="purchase.html">Purchase</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="locations.html" class="active">Locations</a></li>
+      </ul>
+      <div class="nav-hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="container">
+      <h1>Our <span style="color:var(--accent-neon)">Locations</span></h1>
+      <p>Visit any of our 12 offline stores across Indonesia for hands-on gaming experiences.</p>
+    </div>
+  </div>
+
+  <section style="padding-top:0;">
+    <div class="container">
+
+      <!-- Map Placeholder -->
+      <div class="map-placeholder reveal">
+        <div class="map-pins">
+          <span class="map-pin" style="top:30%;left:20%;animation-delay:0s;">📍</span>
+          <span class="map-pin" style="top:45%;left:50%;animation-delay:0.3s;">📍</span>
+          <span class="map-pin" style="top:25%;left:70%;animation-delay:0.6s;">📍</span>
+          <span class="map-pin" style="top:65%;left:35%;animation-delay:0.9s;">📍</span>
+          <span class="map-pin" style="top:55%;left:75%;animation-delay:1.2s;">📍</span>
+          <span class="map-pin" style="top:75%;left:60%;animation-delay:1.5s;">📍</span>
+        </div>
+        <div class="map-icon">🗺️</div>
+        <p>INTERACTIVE MAP — 12 STORE LOCATIONS ACROSS INDONESIA</p>
+      </div>
+
+      <!-- Store Grid -->
+      <div class="section-header reveal">
+        <h2>Find a <span>Store</span></h2>
+        <p>Every store is staffed by gamers who know their titles.</p>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="locations-grid">
+
+        <div class="location-card reveal">
+          <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/jakarta selatan.jpg" alt="Jakarta Selatan" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+          <div class="location-body">
+            <span class="hours-badge open">● Open Now</span>
+            <h3>GameStoB — Jakarta Selatan</h3>
+            <p class="location-desc">Our flagship store and headquarters. Largest selection of physical and digital titles with a dedicated gaming lounge.</p>
+            <div class="location-info">
+              <div class="location-info-row"><span class="info-icon">📍</span><span>Jl. Sudirman No. 88, Jakarta Selatan 12190</span></div>
+              <div class="location-info-row"><span class="info-icon">🕐</span><span>Mon–Fri: 10:00 – 22:00 · Sat–Sun: 09:00 – 23:00</span></div>
+              <div class="location-info-row"><span class="info-icon">📞</span><span>+62 21 5555 0001</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-card reveal">
+          <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/bandung.jpg" alt="Bandung" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+          <div class="location-body">
+            <span class="hours-badge open">● Open Now</span>
+            <h3>GameStoB — Bandung</h3>
+            <p class="location-desc">Nestled in the heart of Bandung's creative district. Known for indie titles and retro gaming collections.</p>
+            <div class="location-info">
+              <div class="location-info-row"><span class="info-icon">📍</span><span>Jl. Braga No. 42, Bandung 40111</span></div>
+              <div class="location-info-row"><span class="info-icon">🕐</span><span>Mon–Sun: 10:00 – 21:00</span></div>
+              <div class="location-info-row"><span class="info-icon">📞</span><span>+62 22 5555 0002</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-card reveal">
+          <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/surabaya.jpg" alt="Surabaya" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+          <div class="location-body">
+            <span class="hours-badge open">● Open Now</span>
+            <h3>GameStoB — Surabaya</h3>
+            <p class="location-desc">East Java's largest GameStoB store, located in Galaxy Mall. Features a full PS5 and Xbox demo station.</p>
+            <div class="location-info">
+              <div class="location-info-row"><span class="info-icon">📍</span><span>Galaxy Mall Lt. 2, Surabaya 60281</span></div>
+              <div class="location-info-row"><span class="info-icon">🕐</span><span>Mon–Sun: 10:00 – 22:00</span></div>
+              <div class="location-info-row"><span class="info-icon">📞</span><span>+62 31 5555 0003</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-card reveal">
+          <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/jogja.jpg" alt="Yogyakarta" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+          <div class="location-body">
+            <span class="hours-badge closed">● Closed</span>
+            <h3>GameStoB — Yogyakarta</h3>
+            <p class="location-desc">Cozy cultural hub store near Malioboro. Popular for RPG enthusiasts and JRPG collections.</p>
+            <div class="location-info">
+              <div class="location-info-row"><span class="info-icon">📍</span><span>Jl. Malioboro No. 101, Yogyakarta 55213</span></div>
+              <div class="location-info-row"><span class="info-icon">🕐</span><span>Tue–Sun: 11:00 – 21:00 · Mon: Closed</span></div>
+              <div class="location-info-row"><span class="info-icon">📞</span><span>+62 274 5555 004</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-card reveal">
+          <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/bali.jpg" alt="Bali" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+          <div class="location-body">
+            <span class="hours-badge open">● Open Now</span>
+            <h3>GameStoB — Bali</h3>
+            <p class="location-desc">Our tourist-friendly store in Kuta. Popular with international visitors looking for region-free game keys.</p>
+            <div class="location-info">
+              <div class="location-info-row"><span class="info-icon">📍</span><span>Jl. Legian No. 77, Kuta, Bali 80361</span></div>
+              <div class="location-info-row"><span class="info-icon">🕐</span><span>Mon–Sun: 09:00 – 23:00</span></div>
+              <div class="location-info-row"><span class="info-icon">📞</span><span>+62 361 5555 005</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-card reveal">
+          <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/tanggerang.jpg" alt="Tangerang" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+          <div class="location-body">
+            <span class="hours-badge open">● Open Now</span>
+            <h3>GameStoB — Tangerang</h3>
+            <p class="location-desc">Located in Summarecon Mall Serpong. Serves the greater Tangerang gaming community with fast key delivery.</p>
+            <div class="location-info">
+              <div class="location-info-row"><span class="info-icon">📍</span><span>Summarecon Mall Serpong Lt. 3, Tangerang 15810</span></div>
+              <div class="location-info-row"><span class="info-icon">🕐</span><span>Mon–Sun: 10:00 – 22:00</span></div>
+              <div class="location-info-row"><span class="info-icon">📞</span><span>+62 21 5555 0006</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- View All Button -->
+      <div style="text-align:center; margin-top:48px;">
+        <p style="color:var(--text-muted);margin-bottom:16px;font-size:0.9rem;">Showing 6 of 12 stores</p>
+        <button class="btn btn-outline" onclick="this.closest('section').querySelector('.extra-stores').classList.toggle('hidden'); this.textContent = this.textContent.includes('View') ? 'Show Less' : 'View All 12 Stores'">
+          View All 12 Stores
+        </button>
+      </div>
+
+      <div class="extra-stores hidden" style="margin-top:28px;">
+        <div class="locations-grid" style="margin-top:28px;">
+          <div class="location-card reveal">
+            <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/makasar.jpg" alt="Makassar" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+            <div class="location-body">
+              <span class="hours-badge open">● Open Now</span>
+              <h3>GameStoB — Makassar</h3>
+              <p class="location-desc">Serving Sulawesi's gaming community at Trans Studio Mall.</p>
+              <div class="location-info">
+                <div class="location-info-row"><span class="info-icon">📍</span><span>Trans Studio Mall, Makassar 90231</span></div>
+                <div class="location-info-row"><span class="info-icon">🕐</span><span>Mon–Sun: 10:00 – 22:00</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="location-card reveal">
+            <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/medan.jpg" alt="Medan" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+            <div class="location-body">
+              <span class="hours-badge open">● Open Now</span>
+              <h3>GameStoB — Medan</h3>
+              <p class="location-desc">North Sumatra's go-to gaming store at Sun Plaza.</p>
+              <div class="location-info">
+                <div class="location-info-row"><span class="info-icon">📍</span><span>Sun Plaza Lt. 3, Medan 20112</span></div>
+                <div class="location-info-row"><span class="info-icon">🕐</span><span>Mon–Sun: 10:00 – 21:30</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="location-card reveal">
+            <div class="location-thumb" style="padding:0;overflow:hidden;"><img src="../assets/images/semarang.jpg" alt="Semarang" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+            <div class="location-body">
+              <span class="hours-badge closed">● Closed</span>
+              <h3>GameStoB — Semarang</h3>
+              <p class="location-desc">Central Java's newest GameStoB location at Java Supermall.</p>
+              <div class="location-info">
+                <div class="location-info-row"><span class="info-icon">📍</span><span>Java Supermall Lt. 2, Semarang 50145</span></div>
+                <div class="location-info-row"><span class="info-icon">🕐</span><span>Mon–Sun: 10:00 – 21:00</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="nav-logo">Game<span>StoB</span></a>
+          <p>Your universe of authentic game keys, new releases, DLCs, and offline store experiences since 2015.</p>
+        </div>
+        <div class="footer-col"><h4>Navigate</h4><ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="catalog.html">Catalog</a></li>
+          <li><a href="purchase.html">Purchase</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="locations.html">Locations</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Platform</h4><ul>
+          <li><a href="#">PC Games</a></li>
+          <li><a href="#">PlayStation</a></li>
+          <li><a href="#">Xbox</a></li>
+          <li><a href="#">Nintendo Switch</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Support</h4><ul>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Refund Policy</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 GameStoB. All rights reserved.</p>
+        <p style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.75rem;">COMP6800 · HCI Project</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    document.querySelector('.extra-stores').style.display = 'none';
+    document.querySelector('button[onclick]').addEventListener('click', function() {
+      const extra = document.querySelector('.extra-stores');
+      if (extra.style.display === 'none') {
+        extra.style.display = 'block';
+        this.textContent = 'Show Less';
+      } else {
+        extra.style.display = 'none';
+        this.textContent = 'View All 12 Stores';
+      }
+    });
+  </script>
+  <style>
+    .hidden { display: none; }
+  </style>
+</body>
+</html>

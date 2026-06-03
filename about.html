@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us — GameStoB</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .about-hero {
+      padding: 100px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 80% 50%, rgba(124,58,237,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 10% 80%, rgba(34,211,238,0.07) 0%, transparent 60%);
+    }
+    .about-hero-content { position: relative; z-index: 1; max-width: 720px; }
+    .about-hero-content .label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .about-hero-content .label::before { content:''; width:32px; height:1px; background:var(--accent-cyan); }
+    .about-hero-content h1 {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+    .about-hero-content p {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent-purple), var(--accent-cyan));
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 48px;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -49px;
+      top: 6px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      border: 3px solid var(--bg-primary);
+      box-shadow: var(--glow-purple);
+    }
+    .timeline-year {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+    .timeline-item h3 {
+      font-size: 1rem;
+      font-family: var(--font-display);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    .timeline-item p { color: var(--text-secondary); font-size: 0.95rem; }
+
+    /* Values Grid */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .value-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: all var(--transition);
+    }
+    .value-card:hover {
+      border-color: var(--border-bright);
+      box-shadow: var(--glow-purple);
+      transform: translateY(-4px);
+    }
+    .value-icon {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .value-card h3 {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .value-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; }
+
+    /* Team */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .team-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-4px);
+    }
+    .team-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 16px;
+      box-shadow: var(--glow-purple);
+    }
+    .team-card h3 { font-size: 0.85rem; margin-bottom: 4px; }
+    .team-card p { color: var(--text-muted); font-size: 0.82rem; }
+
+    /* Stats Banner */
+    .stats-banner {
+      background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(34,211,238,0.08));
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      padding: 56px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+    .stats-banner .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--accent-neon);
+      text-shadow: var(--glow-purple);
+      display: block;
+    }
+    .stats-banner .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .values-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-banner { grid-template-columns: repeat(2, 1fr); padding: 32px 24px; }
+    }
+    @media screen and (max-width: 480px) {
+      .team-grid { grid-template-columns: 1fr; }
+      .stats-banner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">Game<span>StoB</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="catalog.html">Catalog</a></li>
+        <li><a href="purchase.html">Purchase</a></li>
+        <li><a href="about.html" class="active">About Us</a></li>
+        <li><a href="locations.html">Locations</a></li>
+      </ul>
+      <div class="nav-hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <!-- About Hero -->
+  <section class="about-hero">
+    <div class="about-hero-bg"></div>
+    <div class="container">
+      <div class="about-hero-content">
+        <div class="label">Our Story</div>
+        <h1>Born from <span style="color:var(--accent-neon)">Passion</span>,<br>Built for Gamers.</h1>
+        <p>
+          GameStoB started as a small idea between two friends in 2015 — the belief that every gamer deserves 
+          access to authentic titles at fair prices, backed by a community that understands the culture.
+          From a single laptop and a handful of digital keys, we've grown into a trusted name with over 
+          5,000 titles and multiple physical store locations across the country.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line"></div>
+
+  <!-- Stats -->
+  <section>
+    <div class="container">
+      <div class="stats-banner reveal">
+        <div>
+          <span class="stat-number">5,000+</span>
+          <span class="stat-label">Game Titles</span>
+        </div>
+        <div>
+          <span class="stat-number">850K+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div>
+          <span class="stat-number">12</span>
+          <span class="stat-label">Physical Stores</span>
+        </div>
+        <div>
+          <span class="stat-number">10+</span>
+          <span class="stat-label">Years in Business</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line"></div>
+
+  <!-- Our Story Timeline -->
+  <section>
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;">
+        <div>
+          <div class="section-header" style="text-align:left;margin-bottom:40px;">
+            <h2>Our <span>Journey</span></h2>
+            <p>From a small idea to a thriving gaming ecosystem.</p>
+            <div class="section-divider" style="margin:16px 0 0;"></div>
+          </div>
+          <div class="timeline reveal">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">2015</div>
+              <h3>The Beginning</h3>
+              <p>Founded with just 50 titles and a passion for gaming culture. First 100 orders came from a Discord community.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">2017</div>
+              <h3>First Physical Store</h3>
+              <p>Opened our first brick-and-mortar location, proving that the gaming retail experience wasn't dead.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">2019</div>
+              <h3>Catalog Hits 1,000 Titles</h3>
+              <p>Partnered with major publishers and expanded our digital key platform to cover all platforms.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">2022</div>
+              <h3>National Expansion</h3>
+              <p>Expanded to 10 cities, launched a loyalty program, and surpassed 500,000 customers served.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-year">2026</div>
+              <h3>Global Vision</h3>
+              <p>Launching our official global website, bringing GameStoB to gamers worldwide with 5,000+ titles.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Background info -->
+        <div class="reveal">
+          <div class="section-header" style="text-align:left;margin-bottom:40px;">
+            <h2>Who We <span>Are</span></h2>
+            <p>More than a store — a community.</p>
+            <div class="section-divider" style="margin:16px 0 0;"></div>
+          </div>
+          <div style="color:var(--text-secondary);font-size:1rem;line-height:1.9;">
+            <p style="margin-bottom:20px;">
+              GameStoB is a digital and physical game retailer headquartered in Indonesia. We specialize in 
+              providing authentic game keys, pre-order titles, DLCs, and collector's editions for PC, PlayStation, 
+              Xbox, and Nintendo Switch.
+            </p>
+            <p style="margin-bottom:20px;">
+              What makes us different is our dual presence — we bridge the gap between the convenience of 
+              online shopping and the community experience of physical stores. Our staff are gamers themselves, 
+              capable of giving real recommendations based on actual gameplay.
+            </p>
+            <p>
+              We believe gaming is not just entertainment — it is culture, art, and connection. 
+              Our mission is to ensure every gamer, regardless of budget or platform, has access to 
+              an authentic and enjoyable experience.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line"></div>
+
+  <!-- Key Characteristics / Values -->
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Key <span>Characteristics</span></h2>
+        <p>The principles that guide everything we do.</p>
+        <div class="section-divider"></div>
+      </div>
+      <div class="values-grid">
+        <div class="value-card reveal">
+          <span class="value-icon">🔐</span>
+          <h3>100% Authentic</h3>
+          <p>Every game key we sell is sourced directly from official publishers and authorized distributors. No grey-market, no risk.</p>
+        </div>
+        <div class="value-card reveal">
+          <span class="value-icon">⚡</span>
+          <h3>Instant Delivery</h3>
+          <p>Digital keys are delivered within minutes of payment confirmation, 24/7, every day of the year.</p>
+        </div>
+        <div class="value-card reveal">
+          <span class="value-icon">🎮</span>
+          <h3>Gamer-First</h3>
+          <p>Our team is made up of passionate gamers who provide genuine recommendations and community-driven support.</p>
+        </div>
+        <div class="value-card reveal">
+          <span class="value-icon">🌍</span>
+          <h3>All Platforms</h3>
+          <p>Whether you're on PC, PlayStation, Xbox, or Switch, we've got titles and DLCs for your setup.</p>
+        </div>
+        <div class="value-card reveal">
+          <span class="value-icon">🤝</span>
+          <h3>Trusted Community</h3>
+          <p>850,000+ customers across 10 years trust GameStoB as their go-to retailer for gaming needs.</p>
+        </div>
+        <div class="value-card reveal">
+          <span class="value-icon">🏪</span>
+          <h3>Physical Presence</h3>
+          <p>12 offline stores where you can experience games firsthand, pick up physical editions, and connect with other gamers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line"></div>
+
+  <!-- Team -->
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Meet the <span>Team</span></h2>
+        <p>The people behind GameStoB.</p>
+        <div class="section-divider"></div>
+      </div>
+      <div class="team-grid">
+        <div class="team-card reveal">
+          <div class="team-avatar">👨‍💻</div>
+          <h3>Alex Reeves</h3>
+          <p>Co-Founder & CEO</p>
+        </div>
+        <div class="team-card reveal">
+          <div class="team-avatar">👩‍🎨</div>
+          <h3>Mira Santoso</h3>
+          <p>Head of Design</p>
+        </div>
+        <div class="team-card reveal">
+          <div class="team-avatar">👨‍💼</div>
+          <h3>Jason Lim</h3>
+          <p>Operations Director</p>
+        </div>
+        <div class="team-card reveal">
+          <div class="team-avatar">👩‍💻</div>
+          <h3>Priya Natalia</h3>
+          <p>Lead Developer</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="nav-logo">Game<span>StoB</span></a>
+          <p>Your universe of authentic game keys, new releases, DLCs, and offline store experiences since 2015.</p>
+        </div>
+        <div class="footer-col"><h4>Navigate</h4><ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="catalog.html">Catalog</a></li>
+          <li><a href="purchase.html">Purchase</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="locations.html">Locations</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Platform</h4><ul>
+          <li><a href="#">PC Games</a></li>
+          <li><a href="#">PlayStation</a></li>
+          <li><a href="#">Xbox</a></li>
+          <li><a href="#">Nintendo Switch</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Support</h4><ul>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Refund Policy</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 GameStoB. All rights reserved.</p>
+        <p style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.75rem;">COMP6800 · HCI Project</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

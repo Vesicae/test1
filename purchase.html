@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase — GameStoB</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .purchase-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+    }
+    .form-card h2 {
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      color: var(--accent-neon);
+    }
+    .form-card .sub {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* Radio group */
+    .radio-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .radio-option {
+      flex: 1;
+      min-width: 120px;
+    }
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+    .radio-option label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    .radio-option label .icon { font-size: 1.6rem; }
+    .radio-option input[type="radio"]:checked + label {
+      border-color: var(--accent-neon);
+      background: rgba(124,58,237,0.12);
+      color: var(--accent-neon);
+      box-shadow: var(--glow-purple);
+    }
+    .radio-option label:hover {
+      border-color: var(--border-bright);
+      color: var(--text-primary);
+    }
+
+    /* Order Summary */
+    .order-summary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: sticky;
+      top: 90px;
+    }
+    .order-summary h3 {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      gap: 12px;
+    }
+    .order-item-info { flex: 1; }
+    .order-item-title {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .order-item-sub { font-size: 0.8rem; color: var(--text-muted); }
+    .order-totals { margin-top: 20px; }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .total-row.grand {
+      border-top: 1px solid var(--border-bright);
+      margin-top: 12px;
+      padding-top: 16px;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+    .total-row.grand .price { font-size: 1.3rem; }
+
+    /* Checkbox */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-purple);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .checkbox-group label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .checkbox-group label a { color: var(--accent-neon); }
+
+    /* Success Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: var(--glow-purple), 0 40px 80px rgba(0,0,0,0.6);
+    }
+    .modal-icon { font-size: 4rem; margin-bottom: 20px; }
+    .modal-box h2 { font-size: 1.4rem; margin-bottom: 12px; color: var(--accent-green); }
+    .modal-box p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 28px; }
+
+    @media screen and (max-width: 768px) {
+      .purchase-layout { grid-template-columns: 1fr; }
+      .order-summary { position: static; }
+      .form-card { padding: 24px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">Game<span>StoB</span></a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="catalog.html">Catalog</a></li>
+        <li><a href="purchase.html" class="active">Purchase</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="locations.html">Locations</a></li>
+      </ul>
+      <div class="nav-hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="container">
+      <h1>Complete Your <span style="color:var(--accent-neon)">Purchase</span></h1>
+      <p>Secure checkout. Instant delivery. Authentic keys guaranteed.</p>
+    </div>
+  </div>
+
+  <section style="padding-top:0;">
+    <div class="container">
+      <div class="purchase-layout">
+
+        <!-- Form -->
+        <form id="purchase-form" novalidate>
+
+          <!-- Section: Contact -->
+          <div class="form-card" style="margin-bottom:24px;">
+            <h2>01 — Contact Information</h2>
+            <p class="sub">We'll send your game key to this email address.</p>
+
+            <!-- Component 1: Text Input — Full Name -->
+            <div class="form-group">
+              <label for="full-name">Full Name</label>
+              <input type="text" id="full-name" placeholder="e.g. John Doe" autocomplete="name">
+              <span class="form-error"></span>
+            </div>
+
+            <!-- Component 2: Email Input -->
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+              <span class="form-error"></span>
+            </div>
+
+            <!-- Component 5: Select (Country) -->
+            <div class="form-group">
+              <label for="country">Country</label>
+              <select id="country">
+                <option value="">— Select your country —</option>
+                <option value="ID">Indonesia</option>
+                <option value="US">United States</option>
+                <option value="UK">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="JP">Japan</option>
+                <option value="SG">Singapore</option>
+                <option value="MY">Malaysia</option>
+                <option value="PH">Philippines</option>
+                <option value="other">Other</option>
+              </select>
+              <span class="form-error"></span>
+            </div>
+          </div>
+
+          <!-- Section: Payment Method Radio -->
+          <div class="form-card" style="margin-bottom:24px;">
+            <h2>02 — Payment Method</h2>
+            <p class="sub">Choose how you want to pay.</p>
+
+            <!-- Component 3: Radio Buttons -->
+            <div class="form-group" id="payment-method-group">
+              <label>Payment Type</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" name="payment-method" id="pm-credit" value="credit">
+                  <label for="pm-credit">
+                    <span class="icon">💳</span>
+                    Credit Card
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="payment-method" id="pm-debit" value="debit">
+                  <label for="pm-debit">
+                    <span class="icon">🏦</span>
+                    Debit Card
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="payment-method" id="pm-paypal" value="paypal">
+                  <label for="pm-paypal">
+                    <span class="icon">🅿️</span>
+                    PayPal
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" name="payment-method" id="pm-crypto" value="crypto">
+                  <label for="pm-crypto">
+                    <span class="icon">₿</span>
+                    Crypto
+                  </label>
+                </div>
+              </div>
+              <span class="form-error"></span>
+            </div>
+          </div>
+
+          <!-- Section: Card Details -->
+          <div class="form-card" style="margin-bottom:24px;">
+            <h2>03 — Card Details</h2>
+            <p class="sub">Your card data is encrypted and never stored on our servers.</p>
+
+            <!-- Component 1b: Text Input — Card Number (Luhn validated) -->
+            <div class="form-group">
+              <label for="card-number">Card Number</label>
+              <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="cc-number">
+              <span class="form-error"></span>
+            </div>
+
+            <div class="form-row">
+              <!-- Component 1c: Text Input — Expiry (future date validated) -->
+              <div class="form-group">
+                <label for="expiry">Expiry Date</label>
+                <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp">
+                <span class="form-error"></span>
+              </div>
+
+              <!-- Component 1d: Number-like Input — CVV (numeric range validated) -->
+              <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" placeholder="123" maxlength="4" autocomplete="cc-csc">
+                <span class="form-error"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Terms Checkbox -->
+          <div class="form-card" style="margin-bottom:32px;">
+            <h2>04 — Agreement</h2>
+            <p class="sub">Please review and agree before completing your order.</p>
+
+            <!-- Component 4: Checkbox -->
+            <div class="form-group">
+              <div class="checkbox-group">
+                <input type="checkbox" id="terms">
+                <label for="terms">
+                  I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>. 
+                  I understand that game keys are non-refundable once delivered.
+                </label>
+              </div>
+              <span class="form-error"></span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:16px;">
+            🔒 Complete Purchase
+          </button>
+        </form>
+
+        <!-- Order Summary -->
+        <aside class="order-summary">
+          <h3>Order Summary</h3>
+          <div class="order-item">
+            <div class="order-item-info">
+              <div class="order-item-title">Neon Horizon X</div>
+              <div class="order-item-sub">PC · Digital Key</div>
+            </div>
+            <span class="price">$59.99</span>
+          </div>
+          <div class="order-item">
+            <div class="order-item-info">
+              <div class="order-item-title">Dark Nexus — Shadow Realm DLC</div>
+              <div class="order-item-sub">PC · DLC Key</div>
+            </div>
+            <span class="price">$9.99</span>
+          </div>
+          <div class="order-totals">
+            <div class="total-row"><span>Subtotal</span><span>$69.98</span></div>
+            <div class="total-row"><span>Discount (GAMER10)</span><span style="color:var(--accent-green)">-$7.00</span></div>
+            <div class="total-row"><span>Tax (11%)</span><span>$6.93</span></div>
+            <div class="total-row grand">
+              <span>Total</span>
+              <span class="price">$69.91</span>
+            </div>
+          </div>
+
+          <div style="margin-top:24px; padding:16px; background:rgba(74,222,128,0.06); border:1px solid rgba(74,222,128,0.2); border-radius:var(--radius-md);">
+            <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--accent-green);">🔐 256-bit SSL Encrypted</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:6px;">Keys delivered within 5 minutes after payment confirmation.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal-box">
+      <div class="modal-icon">✅</div>
+      <h2>Payment Successful!</h2>
+      <p>Your game key has been sent to your email address. Check your inbox within 5 minutes. Enjoy your game!</p>
+      <button id="modal-close" class="btn btn-primary" style="width:100%;justify-content:center;">Back to Store</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="nav-logo">Game<span>StoB</span></a>
+          <p>Your universe of authentic game keys, new releases, DLCs, and offline store experiences since 2015.</p>
+        </div>
+        <div class="footer-col"><h4>Navigate</h4><ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="catalog.html">Catalog</a></li>
+          <li><a href="purchase.html">Purchase</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="locations.html">Locations</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Support</h4><ul>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Refund Policy</a></li>
+        </ul></div>
+        <div class="footer-col"><h4>Legal</h4><ul>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 GameStoB. All rights reserved.</p>
+        <p style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.75rem;">COMP6800 · HCI Project</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/purchase.js"></script>
+</body>
+</html>
