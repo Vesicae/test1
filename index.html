@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameStoB — Your Universe of Games</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Hero Section ── */
+    .hero {
+      position: relative;
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('../assets/images/hero banner.jpg');
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 80% at 65% 50%, rgba(124,58,237,0.4) 0%, transparent 70%),
+        linear-gradient(135deg, rgba(10,10,15,0.85) 0%, rgba(15,15,26,0.75) 100%);
+    }
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,58,237,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+    .hero-content { z-index: 1; }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--accent-cyan);
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+    .hero h1 .highlight {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--accent-neon);
+      display: block;
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      max-width: 460px;
+      line-height: 1.8;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 56px;
+    }
+    .stat-item {}
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent-neon);
+      text-shadow: var(--glow-purple);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Sale banner card */
+    .hero-banner-card {
+      z-index: 1;
+      position: relative;
+    }
+    .sale-banner {
+      background: linear-gradient(135deg, #1a0a2e 0%, #0f0f1a 50%, #0a1a2e 100%);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--glow-purple), 0 24px 60px rgba(0,0,0,0.6);
+    }
+    .sale-banner::before {
+      content: 'SALE';
+      position: absolute;
+      top: -10px;
+      right: -20px;
+      font-family: var(--font-display);
+      font-size: 8rem;
+      font-weight: 900;
+      color: rgba(124,58,237,0.06);
+      pointer-events: none;
+    }
+    .sale-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      padding: 6px 16px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .sale-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .sale-sub {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+    .sale-discount {
+      font-family: var(--font-mono);
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--accent-pink);
+      text-shadow: var(--glow-pink);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+    .sale-timer {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .timer-block {
+      text-align: center;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      min-width: 60px;
+    }
+    .timer-num {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      color: var(--accent-cyan);
+      display: block;
+    }
+    .timer-label {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Game Cards Grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .game-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .game-card:hover {
+      border-color: var(--border-bright);
+      box-shadow: var(--glow-purple);
+      transform: translateY(-6px);
+    }
+    .game-card-img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(135deg, #1a0a2e, #0a1a2e);
+      position: relative;
+    }
+    .game-card-img-placeholder {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, #1a0a2e 0%, #0f0e1a 50%, #0a1428 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .game-card-img-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(34,211,238,0.1));
+    }
+    .game-card-img-placeholder span { position: relative; z-index: 1; font-size: 2.5rem; }
+    .game-card-body { padding: 16px; }
+    .game-card-body h3 {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .game-card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    /* DLC section */
+    .dlc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .dlc-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      transition: all var(--transition);
+    }
+    .dlc-item:hover {
+      border-color: var(--border-bright);
+      background: var(--bg-card-hover);
+    }
+    .dlc-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .dlc-info { flex: 1; }
+    .dlc-info h4 {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .dlc-info p { font-size: 0.85rem; color: var(--text-muted); }
+
+    @media screen and (max-width: 768px) {
+      .hero .container { grid-template-columns: 1fr; gap: 40px; padding-top: 40px; }
+      .hero-stats { gap: 24px; }
+      .games-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media screen and (max-width: 480px) {
+      .games-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Game<span>StoB</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="pages/catalog.html">Catalog</a></li>
+        <li><a href="pages/purchase.html">Purchase</a></li>
+        <li><a href="pages/about.html">About Us</a></li>
+        <li><a href="pages/locations.html">Locations</a></li>
+      </ul>
+      <div class="nav-hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero scanlines">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-eyebrow">Est. 2015 · 5000+ Titles</div>
+        <h1 class="glitch" data-text="YOUR UNIVERSE">
+          YOUR UNIVERSE
+          <span class="highlight">OF GAMES</span>
+        </h1>
+        <p class="hero-desc">
+          Authentic game keys, new releases, DLCs, and a network of offline stores. 
+          Level up your collection with over 5,000 titles.
+        </p>
+        <div class="hero-actions">
+          <a href="pages/catalog.html" class="btn btn-primary">Browse Catalog</a>
+          <a href="pages/purchase.html" class="btn btn-outline">Buy Now</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">5K+</div>
+            <div class="stat-label">Game Titles</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">200+</div>
+            <div class="stat-label">New This Month</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Offline Stores</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sale Banner -->
+      <div class="hero-banner-card reveal">
+        <div class="sale-banner">
+          <div class="sale-badge">🔥 Mega Sale — Limited Time</div>
+          <div class="sale-title">WINTER GAMING<br>EXTRAVAGANZA</div>
+          <div class="sale-sub">Up to 70% off on top titles</div>
+          <div class="sale-discount">70% OFF</div>
+          <div class="sale-timer">
+            <div class="timer-block"><span class="timer-num" id="t-h">08</span><span class="timer-label">Hours</span></div>
+            <div class="timer-block"><span class="timer-num" id="t-m">42</span><span class="timer-label">Mins</span></div>
+            <div class="timer-block"><span class="timer-num" id="t-s">15</span><span class="timer-label">Secs</span></div>
+          </div>
+          <a href="pages/catalog.html" class="btn btn-primary">Shop the Sale</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line"></div>
+
+  <!-- ── Latest Releases ── -->
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Latest <span>Releases</span></h2>
+        <p>Brand new titles just dropped — be the first to own them.</p>
+        <div class="section-divider"></div>
+      </div>
+      <div class="games-grid">
+        <div class="game-card reveal">
+          <img src="../assets/images/neon horizon x.jpg" alt="Neon Horizon X" class="game-card-img" style="width:100%;aspect-ratio:16/10;object-fit:cover;">
+          <div class="game-card-body">
+            <span class="badge badge-pink">NEW</span>
+            <h3>Neon Horizon X</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;">Action RPG · PC / PS5</p>
+            <div class="game-card-meta">
+              <span class="price">$59.99</span>
+              <a href="pages/purchase.html" class="btn btn-primary" style="padding:8px 16px;font-size:0.65rem;">Buy</a>
+            </div>
+          </div>
+        </div>
+        <div class="game-card reveal">
+          <img src="../assets/images/void crussader.jpg" alt="Void Crusaders" class="game-card-img" style="width:100%;aspect-ratio:16/10;object-fit:cover;">
+          <div class="game-card-body">
+            <span class="badge badge-pink">NEW</span>
+            <h3>Void Crusaders</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;">Strategy · PC / Xbox</p>
+            <div class="game-card-meta">
+              <span class="price">$49.99</span>
+              <a href="pages/purchase.html" class="btn btn-primary" style="padding:8px 16px;font-size:0.65rem;">Buy</a>
+            </div>
+          </div>
+        </div>
+        <div class="game-card reveal">
+          <img src="../assets/images/stellar-blade-review-no-banner.jpg" alt="Stellar Collapse" class="game-card-img" style="width:100%;aspect-ratio:16/10;object-fit:cover;">
+          <div class="game-card-body">
+            <span class="badge badge-pink">NEW</span>
+            <h3>Stellar Collapse</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;">Sci-Fi Shooter · PC</p>
+            <div class="game-card-meta">
+              <span class="price">$39.99</span>
+              <a href="pages/purchase.html" class="btn btn-primary" style="padding:8px 16px;font-size:0.65rem;">Buy</a>
+            </div>
+          </div>
+        </div>
+        <div class="game-card reveal">
+          <img src="../assets/images/chrome protocol.jpg" alt="Chrome Protocol" class="game-card-img" style="width:100%;aspect-ratio:16/10;object-fit:cover;">
+          <div class="game-card-body">
+            <span class="badge badge-pink">NEW</span>
+            <h3>Chrome Protocol</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;">Cyberpunk RPG · PC / PS5</p>
+            <div class="game-card-meta">
+              <span class="price">$54.99</span>
+              <a href="pages/purchase.html" class="btn btn-primary" style="padding:8px 16px;font-size:0.65rem;">Buy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line"></div>
+
+  <!-- ── Best Sellers ── -->
+  <section style="background: linear-gradient(180deg, transparent, rgba(124,58,237,0.05), transparent);">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Best <span>Sellers</span></h2>
+        <p>Community favorites — proven to be worth every credit.</p>
+        <div class="section-divider"></div>
+      </div>
+      <div class="games-grid">
+        <div class="game-card reveal">
+          <img src="../assets/images/dark nexus.jpg" alt="Dark Nexus" class="game-card-img" style="width:100%;aspect-ratio:16/10;object-fit:cover;">
+          <div class="game-card-body">
+            <span class="badge badge-cyan">#1 Best Seller</span>
+            <h3>Dark Nexus</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;">Horror · PC / PS5 / Xbox</p>
+            <div class="game-card-meta">
+              <div><span class="price-original">$39.99</span><span class="price">$24.99</span></div>
+              <a href="pages/purchase.html" class="btn btn-outline" style="padding:8px 16px;font-size:0.65rem;">Buy</a>
+            </div>
+          </div>
+        </div>
+        <div class="game-card reveal">
+          <img src="../assets/images/verdant empire.jpg" alt="Verdant Empire" class="game-card-img" style="width:100%;aspect-ratio:16/10;object-fit:cover;">
+          <div class="game-card-body">
+            <span class="badge badge-cyan">#2 Best Seller</span>
+            <h3>Verdant Empire</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;">Simulation · PC</p>
+            <div class="game-card-meta">
+              <span class="price">$29.99</span>
+              <a href="pages/purchase.html" class="btn btn-outline" style="padding:8px 16px;font-size:0.65rem;">Buy</a>
+            </div>
+          </div>
+        </div>
+        <div class="game-card reveal">
+          <img src="../assets/images/apex protocol.jpg" alt="Apex Protocol" class="game-card-img" style="width:100%;aspect-ratio:16/10;object-fit:cover;">
+          <div class="game-card-body">
+            <span class="badge badge-cyan">#3 Best Seller</span>
+            <h3>Apex Protocol</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;">FPS · PC / PS5</p>
+            <div class="game-card-meta">
+              <div><span class="price-original">$49.99</span><span class="price">$34.99</span></div>
+              <a href="pages/purchase.html" class="btn btn-outline" style="padding:8px 16px;font-size:0.65rem;">Buy</a>
+            </div>
+          </div>
+        </div>
+        <div class="game-card reveal">
+          <img src="../assets/images/thunder grid.jpg" alt="Thunder Grid" class="game-card-img" style="width:100%;aspect-ratio:16/10;object-fit:cover;">
+          <div class="game-card-body">
+            <span class="badge badge-cyan">#4 Best Seller</span>
+            <h3>Thunder Grid</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;">Racing · PC / Xbox</p>
+            <div class="game-card-meta">
+              <span class="price">$19.99</span>
+              <a href="pages/purchase.html" class="btn btn-outline" style="padding:8px 16px;font-size:0.65rem;">Buy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line"></div>
+
+  <!-- ── New DLCs ── -->
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>New <span>DLCs</span></h2>
+        <p>Expand your experience with freshly released downloadable content.</p>
+        <div class="section-divider"></div>
+      </div>
+      <div class="dlc-list" style="max-width: 720px; margin: 0 auto;">
+        <div class="dlc-item reveal">
+          <div class="dlc-icon">🗡️</div>
+          <div class="dlc-info">
+            <h4>Dark Nexus — Shadow Realm DLC</h4>
+            <p>New storyline, 10+ hours of content, exclusive armor set.</p>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div class="price">$9.99</div>
+            <a href="pages/purchase.html" class="btn btn-outline" style="padding:6px 14px;font-size:0.6rem;margin-top:8px;">Get DLC</a>
+          </div>
+        </div>
+        <div class="dlc-item reveal">
+          <div class="dlc-icon">🌱</div>
+          <div class="dlc-info">
+            <h4>Verdant Empire — Ocean Expansion</h4>
+            <p>New biome, aquatic civilizations, naval warfare system.</p>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div class="price">$14.99</div>
+            <a href="pages/purchase.html" class="btn btn-outline" style="padding:6px 14px;font-size:0.6rem;margin-top:8px;">Get DLC</a>
+          </div>
+        </div>
+        <div class="dlc-item reveal">
+          <div class="dlc-icon">🔫</div>
+          <div class="dlc-info">
+            <h4>Apex Protocol — Weapon Pack Vol.3</h4>
+            <p>12 new weapons, 3 new maps, ranked season pass.</p>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div class="price">$7.99</div>
+            <a href="pages/purchase.html" class="btn btn-outline" style="padding:6px 14px;font-size:0.6rem;margin-top:8px;">Get DLC</a>
+          </div>
+        </div>
+        <div class="dlc-item reveal">
+          <div class="dlc-icon">🚗</div>
+          <div class="dlc-info">
+            <h4>Thunder Grid — Neon City Circuit</h4>
+            <p>4 new tracks, 8 new cars, night racing mode.</p>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div class="price">$5.99</div>
+            <a href="pages/purchase.html" class="btn btn-outline" style="padding:6px 14px;font-size:0.6rem;margin-top:8px;">Get DLC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo">Game<span>StoB</span></a>
+          <p>Your universe of authentic game keys, new releases, DLCs, and offline store experiences since 2015.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="pages/catalog.html">Catalog</a></li>
+            <li><a href="pages/purchase.html">Purchase</a></li>
+            <li><a href="pages/about.html">About Us</a></li>
+            <li><a href="pages/locations.html">Locations</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#">PC Games</a></li>
+            <li><a href="#">PlayStation</a></li>
+            <li><a href="#">Xbox</a></li>
+            <li><a href="#">Nintendo Switch</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Refund Policy</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 GameStoB. All rights reserved.</p>
+        <p style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.75rem;">COMP6800 · HCI Project</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Countdown timer
+    let totalSecs = 8 * 3600 + 42 * 60 + 15;
+    function updateTimer() {
+      if (totalSecs <= 0) return;
+      totalSecs--;
+      const h = Math.floor(totalSecs / 3600);
+      const m = Math.floor((totalSecs % 3600) / 60);
+      const s = totalSecs % 60;
+      document.getElementById('t-h').textContent = String(h).padStart(2, '0');
+      document.getElementById('t-m').textContent = String(m).padStart(2, '0');
+      document.getElementById('t-s').textContent = String(s).padStart(2, '0');
+    }
+    setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
